@@ -37,9 +37,10 @@ var autoComplete = (function(){
             offsetTop: 1,
             cache: 1,
             menuClass: '',
+            container: 'body',
             renderItem: function (item, search){
                 // escape special characters
-//                search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+                search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
                 var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
                 return '<div class="autocomplete-suggestion" data-val="' + item + '">' + item.replace(re, "<b>$1</b>") + '</div>';
             },
@@ -56,6 +57,11 @@ var autoComplete = (function(){
             that.sc = document.createElement('div');
             that.sc.className = 'autocomplete-suggestions '+o.menuClass;
 
+            // If adding into a results container, remove the position absolute css styles
+            if (o.container !== "body") {
+                that.sc.className = that.sc.className + ' autocomplete-suggestions--in-container';
+            }
+
             that.autocompleteAttr = that.getAttribute('autocomplete');
             that.setAttribute('autocomplete', 'off');
             that.cache = {};
@@ -63,8 +69,11 @@ var autoComplete = (function(){
 
             that.updateSC = function(resize, next){
                 var rect = that.getBoundingClientRect();
-                that.sc.style.left = Math.round(rect.left + (window.pageXOffset || document.documentElement.scrollLeft) + o.offsetLeft) + 'px';
-                that.sc.style.top = Math.round(rect.bottom + (window.pageYOffset || document.documentElement.scrollTop) + o.offsetTop) + 'px';
+                if (o.container === 'body') {
+                    // If the container is not the body, do not absolutely position in the window.
+                    that.sc.style.left = Math.round(rect.left + (window.pageXOffset || document.documentElement.scrollLeft) + o.offsetLeft) + 'px';
+                    that.sc.style.top = Math.round(rect.bottom + (window.pageYOffset || document.documentElement.scrollTop) + o.offsetTop) + 'px';
+                }
                 that.sc.style.width = Math.round(rect.right - rect.left) + 'px'; // outerWidth
                 if (!resize) {
                     that.sc.style.display = 'block';
@@ -82,7 +91,7 @@ var autoComplete = (function(){
                 }
             }
             addEvent(window, 'resize', that.updateSC);
-            document.body.appendChild(that.sc);
+            document.querySelector(o.container).appendChild(that.sc);
 
             live('autocomplete-suggestion', 'mouseleave', function(e){
                 var sel = that.sc.querySelector('.autocomplete-suggestion.selected');
