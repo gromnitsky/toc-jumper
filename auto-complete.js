@@ -40,7 +40,7 @@ var autoComplete = (function(){
             container: 'body',
             renderItem: function (item, search){
                 // escape special characters
-                search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+                search = search.replace(/[-\/\\^$*+?.()|\[\]{}]/g, '\\$&');
                 var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi");
                 return '<div class="autocomplete-suggestion" data-val="' + item + '">' + item.replace(re, "<b>$1</b>") + '</div>';
             },
@@ -213,7 +213,7 @@ var autoComplete = (function(){
                     that.setAttribute('autocomplete', that.autocompleteAttr);
                 else
                     that.removeAttribute('autocomplete');
-                document.body.removeChild(that.sc);
+                document.querySelector(o.container).removeChild(that.sc);
                 that = null;
             }
         };
