@@ -24,6 +24,8 @@ get-babel-presets = $(foreach idx,$(1),$(npm.root)/babel-preset-$(idx))
 $(umd): $(js.src)
 	@mkdir -p $(dir $@)
 	browserify $(BROWSERIFY_OPT) -s TocJumper index.js -o $@ -t [ $(npm.root)/babelify --presets [ $(call get-babel-presets,$(babel.presets)) ] ]
+	@(echo '// <![CDATA['; cat $@; echo '// ]]>') > $@.tmp
+	@mv $@.tmp $@
 
 compile: $(umd)
 
