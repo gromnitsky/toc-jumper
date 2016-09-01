@@ -7761,6 +7761,14 @@ This document was written in <a class="ulink" href="http://docbook.sourceforge.n
 using the <a class="ulink" href="http://xmlsoft.org/XSLT/" target="_top">Gnome XSLT
 toolkit</a>.
 </p></div></div></div>
-<script src="auto-complete.js"></script>
-<script src="mutt_toc_jump.js"></script>
+<script src="../dist/mutt_toc_jumper.umd.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let mtj = new MuttTocJumper({
+	selector: '.titlepage .title',
+	transform: (str) => str.replace(/^[0-9.\s]+/, '')
+    })
+    mtj.hook()
+})
+</script>
 </body></html>

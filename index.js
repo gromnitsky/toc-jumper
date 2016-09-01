@@ -1,5 +1,7 @@
 'use strict';
 
+let AutoComplete = require('./auto-complete.js')
+
 let MuttTocJumper = class {
     constructor(opt) {
 	this.data = null
@@ -37,7 +39,7 @@ let MuttTocJumper = class {
 }
 .autocomplete-suggestion.selected { background: #eee; }
 `)
-	document.body.addEventListener('keydown', () => {
+	document.body.addEventListener('keydown', (event) => {
 	    if (event.target.nodeName === 'INPUT') return
 	    if (event.key === this.opt.key && !event.ctrlKey) this.dlg()
 	})
@@ -63,7 +65,7 @@ let MuttTocJumper = class {
 	node.innerHTML = '<input size="40" />'
 	let input = node.querySelector('input')
 
-	let ac = new autoComplete({
+	let ac = new AutoComplete({
 	    selector: input,
 	    minChars: 1,
 	    delay: 50,
@@ -93,6 +95,8 @@ let MuttTocJumper = class {
 
 }
 
+module.exports = MuttTocJumper
+
 let make_index = function(selector, transform) {
     let nodes = document.querySelectorAll(selector)
 
@@ -119,12 +123,3 @@ let css_inject = function(css) {
 let focus = function(node) {
     setTimeout( () => node.querySelector('input').focus(), 1)
 }
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    let mtj = new MuttTocJumper({
-	selector: '.titlepage .title',
-	transform: (str) => str.replace(/^[0-9.\s]+/, '')
-    })
-    mtj.hook()
-})
