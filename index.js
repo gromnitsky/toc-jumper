@@ -2,12 +2,12 @@
 
 let AutoComplete = require('./auto-complete.js')
 
-let MuttTocJumper = class {
+let TocJumper = class {
     constructor(opt) {
 	this.data = null
 
 	this.opt = {
-	    id: 'mutt_toc_jumper',
+	    id: 'toc_jumper',
 	    selector: '',
 	    transform: null,
 	    key: 'i'
@@ -16,7 +16,7 @@ let MuttTocJumper = class {
 	for (let idx in opt) {	// merge
 	    if (opt.hasOwnProperty(idx)) this.opt[idx] = opt[idx]
 	}
-	this.log = console.log.bind(console, 'MuttTocJumper:')
+	this.log = console.log.bind(console, 'TocJumper:')
 	this.log('init')
     }
 
@@ -96,7 +96,7 @@ let MuttTocJumper = class {
 
 }
 
-module.exports = MuttTocJumper
+module.exports = TocJumper
 
 let make_index = function(selector, transform) {
     let nodes = document.querySelectorAll(selector)
