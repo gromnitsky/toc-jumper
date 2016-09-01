@@ -84,7 +84,8 @@ let MuttTocJumper = class {
 
 	node.addEventListener('keydown', (event) => {
 	    if (event.key === 'Enter') this.scroll(input.value)
-	    if (event.key === 'Escape') {
+	    // IE11 returns "Esc", Chrome & Firefox return "Escape"
+	    if (event.key.match(/^Esc/)) {
 		ac.destroy()
 		document.body.removeChild(node)
 	    }

@@ -7761,12 +7761,12 @@ This document was written in <a class="ulink" href="http://docbook.sourceforge.n
 using the <a class="ulink" href="http://xmlsoft.org/XSLT/" target="_top">Gnome XSLT
 toolkit</a>.
 </p></div></div></div>
-<script src="../dist/mutt_toc_jumper.umd.js"></script>
+<script src="../build.development/mutt_toc_jumper.umd.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    let mtj = new MuttTocJumper({
+document.addEventListener('DOMContentLoaded', function() {
+    var mtj = new MuttTocJumper({
 	selector: '.titlepage .title',
-	transform: (str) => str.replace(/^[0-9.\s]+/, '')
+	transform: function(str) { return str.replace(/^[0-9.\s]+/, '') }
     })
     mtj.hook()
 })
