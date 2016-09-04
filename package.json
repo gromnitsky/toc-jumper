@@ -1,7 +1,7 @@
 {
     "name": "toc-jumper",
     "private": true,
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Look up a string in the TOC of some HTML manual and go to that entry. Loosely based on (Info-index) idea from the Emacs Info-mode.",
     "main": "index.js",
     "repository": {

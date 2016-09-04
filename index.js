@@ -61,15 +61,17 @@ let TocJumper = class {
 	node.style.right = '1em'
 
 	document.body.appendChild(node)
-	// TODO: add a close btn
-	node.innerHTML = '<input size="40" />'
+	let ac_container = `${this.opt.id}_container`
+	node.innerHTML = `<span id="${this.opt.id}_close" style="float: left; cursor: pointer;" title="Close (Escape)">&otimes;</span>
+<p style="font-size: small; text-align: right; margin: 0 0 .5em 0;"><kbd>i</kbd> &mdash; focus</p>
+<div style="margin-left: 2em;" id="${ac_container}"><input size="40" /></div>`
 	let input = node.querySelector('input')
 
 	let ac = new AutoComplete({
 	    selector: input,
 	    minChars: 1,
 	    delay: 50,
-	    container: '#' + this.opt.id,
+	    container: '#' + ac_container,
 	    source: (term, suggest) => {
 		let list = []
 		for (let key in this.data) {
@@ -82,13 +84,16 @@ let TocJumper = class {
 	    onSelect: (event, term, item) => this.scroll(term)
 	})
 
+	let destroy = function() {
+	    ac.destroy()
+	    document.body.removeChild(node)
+	}
+
+	node.querySelector(`#${this.opt.id}_close`).onclick = destroy
 	node.addEventListener('keydown', (event) => {
 	    if (event.key === 'Enter') this.scroll(input.value)
 	    // IE11 returns "Esc", Chrome & Firefox return "Escape"
-	    if (event.key.match(/^Esc/)) {
-		ac.destroy()
-		document.body.removeChild(node)
-	    }
+	    if (event.key.match(/^Esc/)) destroy()
 	})
 
 	focus(node)
