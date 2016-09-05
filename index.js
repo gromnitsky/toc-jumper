@@ -62,10 +62,20 @@ let TocJumper = class {
 
 	document.body.appendChild(node)
 	let ac_container = `${this.opt.id}_container`
-	node.innerHTML = `<span id="${this.opt.id}_close" style="float: left; cursor: pointer;" title="Close (Escape)">&otimes;</span>
-<p style="font-size: small; text-align: right; margin: 0 0 .5em 0;"><kbd>i</kbd> &mdash; focus</p>
+	let help_id = `${this.opt.id}_help`
+	node.innerHTML = `<span id="${this.opt.id}_close" style="position: absolute; top: 0; left: .2em; color: darkred; cursor: pointer; font-size: 140%;" title="Close">&otimes;</span>
+<p id="${help_id}" style="font-size: small; text-align: right; margin: 0 0 .5em 0;"></p>
 <div style="margin-left: 2em;" id="${ac_container}"><input size="40" /></div>`
 	let input = node.querySelector('input')
+	let help = node.querySelector('#' + help_id)
+
+	let help_focus = function(is_focused) {
+	    help.innerHTML = is_focused ? '<kbd>Esc</kbd> - close'
+		: '<kbd>i</kbd> - focus'
+	}
+
+	input.addEventListener('focus', () => help_focus(true))
+	input.addEventListener('blur', () => help_focus())
 
 	let ac = new AutoComplete({
 	    selector: input,
