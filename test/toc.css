@@ -1,0 +1,60 @@
+@media (min-width: 780px) {
+  body {
+    width: 780px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1200px) {
+  body {
+    width: 100%;
+    margin: 0;
+  }
+
+  .book {
+    /* border: 1px solid black; */
+    width: 780px;
+
+    /* 420 is a min usefull TOC width */
+    margin-left: calc(100% / 2 - 1200px / 2 + 420px);
+  }
+
+  .book > .toc {
+    /* border: 1px solid red; */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100% / 2 - 1200px / 2 + 420px - 1em);
+
+    overflow: auto;
+    height: 100%;
+
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .book > .toc > p {
+    background-color: blue;
+    display: none;
+  }
+
+  .book > .toc > .toc {
+    /* background-color: yellow; */
+    padding: 0 1em;
+    max-width: 480px;
+  }
+
+  .book > .toc > .toc::before {
+    content: "Table of Contents";
+    display: block;
+    font-size: large;
+    font-weight: bold;
+    margin-bottom: 1em;
+  }
+}
+
+/* firefox 48 */
+code,
+pre {
+  word-wrap: break-word;
+}
