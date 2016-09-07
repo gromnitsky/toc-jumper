@@ -12,7 +12,7 @@
   }
 
   .book {
-    /* border: 1px solid black; */
+    /* outline: 1px solid black; */
     width: 780px;
 
     /* 420 is a min usefull TOC width */
@@ -20,7 +20,7 @@
   }
 
   .book > .toc {
-    /* border: 1px solid red; */
+    /* outline: 1px solid red; */
     position: fixed;
     top: 0;
     left: 0;
@@ -34,7 +34,7 @@
   }
 
   .book > .toc > p {
-    background-color: blue;
+    /* background-color: blue; */
     display: none;
   }
 
@@ -53,8 +53,8 @@
   }
 }
 
-/* firefox 48 */
 code,
 pre {
+  white-space: pre-wrap;
   word-wrap: break-word;
 }

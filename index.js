@@ -57,15 +57,19 @@ let TocJumper = class {
 	node.style.color = 'black'
 	node.style.boxShadow = '1px 1px 3px rgba(0, 0, 0, .4)'
 	node.style.position = 'fixed'
-	node.style.top = '4em'
-	node.style.right = '1em'
+	node.style.top = '-6em'
+	node.style.right = '.5em'
+	node.style.transition = 'all 300ms'
 
 	document.body.appendChild(node)
 	let ac_container = `${this.opt.id}_container`
 	let help_id = `${this.opt.id}_help`
-	node.innerHTML = `<span id="${this.opt.id}_close" style="position: absolute; top: 0; left: .2em; color: darkred; cursor: pointer; font-size: 140%;" title="Close">&otimes;</span>
-<p id="${help_id}" style="font-size: small; text-align: right; margin: 0 0 .5em 0;"></p>
-<div style="margin-left: 2em;" id="${ac_container}"><input size="40" /></div>`
+	node.innerHTML = `<span id="${this.opt.id}_close" style="position: absolute; top: .2em; left: .2em; cursor: pointer; font-size: 140%;" title="Close">&otimes;</span>
+<p id="${help_id}" style="text-align: right; margin: 0 0 .5em 0;"></p>
+<div style="margin-left: 2em;" id="${ac_container}">
+<input size="40" spellcheck="false" /></div>`
+	setTimeout( () => node.style.transform = 'translateY(150%)', 1)
+
 	let input = node.querySelector('input')
 	let help = node.querySelector('#' + help_id)
 
