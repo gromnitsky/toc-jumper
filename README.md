@@ -26,9 +26,10 @@ No external dependencies needed.
 
 ## Compilation
 
-You'll need browserify, babelify & babel-preset-babili installed
-_globally_.
+Firstly, you'll need browserify, babelify & babel-preset-es2015
+installed _globally_. Then
 
+	$ npm i
 	$ make release
 
 creates both development & production builds in `dist/`.
