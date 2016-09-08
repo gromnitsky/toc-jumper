@@ -15,5 +15,9 @@
 	"manual"
     ],
     "author": "Alexander Gromnitsky",
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies": {
+	"brfs": "^1.4.3",
+	"uglifyify": "^3.0.2"
+    }
 }

@@ -1,0 +1,57 @@
+/* auto-complete.js */
+.autocomplete-suggestions {
+  text-align: left;
+  cursor: default;
+  border: 1px solid #ccc;
+  border-top: 0;
+  background: white;
+  box-shadow: -1px 1px 3px rgba(0, 0, 0, .1);
+
+  position: absolute;
+  display: none;
+  z-index: 9999;
+  max-height: 15em;
+  overflow: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+.autocomplete-suggestion {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.autocomplete-suggestion.selected {
+  background: #eee;
+}
+
+/* toc-jumper */
+#<%= id %> {
+  border: 1px solid #a9a9a9;
+  padding: 0.8em;
+  background-color: white;
+  color: black;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, .4);
+  position: fixed;
+  top: 4em;
+  right: .5em;
+}
+
+#<%= id %>_close {
+  margin-left: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  line-height: 2em;
+  width: 2em;
+  height: 2em;
+  display: inline-block;
+}
+
+#<%= id %>_close > span {
+  display: inline-block;
+}
+
+#<%= id %>_close:hover {
+  background-color: #e81123;
+  color: white;
+}

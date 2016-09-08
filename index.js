@@ -1,5 +1,7 @@
 'use strict';
 
+let fs = require('fs')		// browserify & brfs
+let template = require('./template')
 let AutoComplete = require('./auto-complete.js')
 
 let TocJumper = class {
@@ -29,44 +31,7 @@ let TocJumper = class {
 
     hook() {
 	this.data = make_index(this.opt.selector, this.opt.transform)
-	css_inject(`
-.autocomplete-suggestions {
-  text-align: left; cursor: default; border: 1px solid #ccc; border-top: 0; background: white; box-shadow: -1px 1px 3px rgba(0, 0, 0, .1);
-  position: absolute; display: none; z-index: 9999; max-height: 15em; overflow: hidden; overflow-y: auto; box-sizing: border-box;
-}
-.autocomplete-suggestion {
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.autocomplete-suggestion.selected { background: #eee; }
-
-#${this.opt.id} {
-  border: 1px solid #a9a9a9;
-  padding: 0.8em;
-  background-color: white;
-  color: black;
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, .4);
-  position: fixed;
-  top: 4em;
-  right: .5em;
-}
-#${this.opt.id}_close {
-  margin-left: 1em;
-  font-weight: bold;
-  cursor: pointer;
-  text-align: center;
-  line-height: 2em;
-  width: 2em;
-  height: 2em;
-  display: inline-block;
-}
-#${this.opt.id}_close > span {
-  display: inline-block;
-}
-#${this.opt.id}_close:hover {
-  background-color: #e81123;
-  color: white;
-}
-`)
+	css_inject({ id: this.opt.id })
 	document.body.addEventListener('keydown', (event) => {
 	    if (event.target.nodeName === 'INPUT') return
 	    if (event.key === this.opt.key && !event.ctrlKey) this.dlg()
@@ -138,9 +103,10 @@ let make_index = function(selector, transform) {
     return r
 }
 
-let css_inject = function(css) {
+let css_inject = function(data) {
     let node = document.createElement('style')
-    node.innerHTML = css
+    let tmpl = template(fs.readFileSync(__dirname + '/index.css', 'utf8'))
+    node.innerHTML = tmpl(data)
     document.body.appendChild(node)
 }
 

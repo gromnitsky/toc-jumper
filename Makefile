@@ -4,7 +4,7 @@ NODE_ENV ?= development
 out := dist
 npm.root := $(shell npm -g root)
 
-js.src := $(wildcard *.js)
+js.src := $(wildcard *.js *.css)
 umd := $(out)/toc-jumper.$(NODE_ENV).js
 babel.presets := es2015
 
@@ -16,14 +16,14 @@ BROWSERIFY_OPT := -d
 endif
 
 ifeq ($(NODE_ENV), min)
-babel.presets += babili
+BROWSERIFY_OPT := -g uglifyify
 endif
 
 get-babel-presets = $(foreach idx,$(1),$(npm.root)/babel-preset-$(idx))
 
 $(umd): $(js.src)
 	@mkdir -p $(dir $@)
-	browserify $(BROWSERIFY_OPT) -s TocJumper index.js -o $@ -t [ $(npm.root)/babelify --presets [ $(call get-babel-presets,$(babel.presets)) ] ]
+	browserify -s TocJumper index.js -o $@ -t brfs -g [ $(npm.root)/babelify --presets [ $(call get-babel-presets,$(babel.presets)) ] ] $(BROWSERIFY_OPT)
 	@(echo '// <![CDATA['; cat $@; echo '// ]]>') > $@.tmp
 	@mv $@.tmp $@
 
