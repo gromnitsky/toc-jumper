@@ -38,6 +38,34 @@ let TocJumper = class {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .autocomplete-suggestion.selected { background: #eee; }
+
+#${this.opt.id} {
+  border: 1px solid #a9a9a9;
+  padding: 0.8em;
+  background-color: white;
+  color: black;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, .4);
+  position: fixed;
+  top: 4em;
+  right: .5em;
+}
+#${this.opt.id}_close {
+  margin-left: 1em;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  line-height: 2em;
+  width: 2em;
+  height: 2em;
+  display: inline-block;
+}
+#${this.opt.id}_close > span {
+  display: inline-block;
+}
+#${this.opt.id}_close:hover {
+  background-color: #e81123;
+  color: white;
+}
 `)
 	document.body.addEventListener('keydown', (event) => {
 	    if (event.target.nodeName === 'INPUT') return
@@ -51,35 +79,11 @@ let TocJumper = class {
 
 	node = document.createElement('div')
 	node.id = this.opt.id
-	node.style.border = '1px solid #a9a9a9'
-	node.style.padding = '0.8em'
-	node.style.backgroundColor = 'white'
-	node.style.color = 'black'
-	node.style.boxShadow = '1px 1px 3px rgba(0, 0, 0, .4)'
-	node.style.position = 'fixed'
-	node.style.top = '-6em'
-	node.style.right = '.5em'
-	node.style.transition = 'all 300ms'
-
-	document.body.appendChild(node)
 	let ac_container = `${this.opt.id}_container`
-	let help_id = `${this.opt.id}_help`
-	node.innerHTML = `<span id="${this.opt.id}_close" style="position: absolute; top: .2em; left: .2em; cursor: pointer; font-size: 140%;" title="Close">&otimes;</span>
-<p id="${help_id}" style="text-align: right; margin: 0 0 .5em 0;"></p>
-<div style="margin-left: 2em;" id="${ac_container}">
-<input size="40" spellcheck="false" /></div>`
-	setTimeout( () => node.style.transform = 'translateY(150%)', 1)
-
+	node.innerHTML = `<span id="${ac_container}"><input size="40" spellcheck="false" /></span>
+<span id="${this.opt.id}_close" title="Close"><span>&times;</span></span>`
+	document.body.appendChild(node)
 	let input = node.querySelector('input')
-	let help = node.querySelector('#' + help_id)
-
-	let help_focus = function(is_focused) {
-	    help.innerHTML = is_focused ? '<kbd>Esc</kbd> - close'
-		: '<kbd>i</kbd> - focus'
-	}
-
-	input.addEventListener('focus', () => help_focus(true))
-	input.addEventListener('blur', () => help_focus())
 
 	let ac = new AutoComplete({
 	    selector: input,
