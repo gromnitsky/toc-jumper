@@ -16,8 +16,8 @@
     ],
     "author": "Alexander Gromnitsky",
     "license": "MIT",
-    "dependencies": {
-	"brfs": "^1.4.3",
-	"uglifyify": "^3.0.2"
+    "devDependencies": {
+	"brfs": "~1.4.3",
+	"uglifyify": "~3.0.2"
     }
 }
