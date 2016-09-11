@@ -12,7 +12,12 @@ let TocJumper = class {
 	    id: 'toc_jumper',
 	    selector: '',
 	    transform: null,
-	    key: 'i'
+	    key: 'i',
+
+	    top: '4em',
+	    right: '.5em',
+	    bottom: 'auto',
+	    left: 'auto',
 	}
 
 	for (let idx in opt) {	// merge
@@ -43,7 +48,10 @@ let TocJumper = class {
 	if (node) return focus(node)
 
 	node = document.createElement('div')
-	node.id = this.opt.id
+	node.id = this.opt.id;
+	['top', 'right', 'bottom', 'left']
+	    .forEach( (idx) => node.style[idx] = this.opt[idx] )
+
 	let ac_container = `${this.opt.id}_container`
 	node.innerHTML = `<span id="${ac_container}"><input size="40" spellcheck="false" /></span>
 <span id="${this.opt.id}_close" title="Close"><span>&times;</span></span>`

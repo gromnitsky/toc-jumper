@@ -24,6 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 No external dependencies needed.
 
+You can also set a custom initial position of the widget:
+
+	new TocJumper({ selector: '...',
+                    top: '1em', right: 'auto', left: '5%' })
+
+By default it's  `top: '4em', right: '.5em'`.
+
+
 ## Compilation
 
 Firstly, you'll need browserify, babelify & babel-preset-es2015
