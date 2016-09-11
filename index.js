@@ -4,6 +4,72 @@ let fs = require('fs')		// browserify & brfs
 let template = require('./template')
 let AutoComplete = require('./auto-complete.js')
 
+let Movable = class {
+    constructor(node) {
+	this.node = node
+	this.offset_x = null
+	this.offset_y = null
+
+	// we ought to specificaly bind mouse* callbacks to this class
+	// for addEventListener/removeEventListener
+	this.mousedown = this._mousedown.bind(this)
+	this.mousemove = this._mousemove.bind(this)
+	this.mouseup = this._mouseup.bind(this)
+
+	this.log = console.log.bind(console, 'Movable:')
+    }
+
+    position(event) {
+	let x = event.clientX - this.offset_x
+	let y = event.clientY - this.offset_y
+
+	// TODO: right, bottom
+	if (x < 0) x = 0
+	if (y < 0) y = 0
+	return {x, y}
+    }
+
+    move(x, y) {
+	this.node.style.left = x + 'px'
+	this.node.style.top = y + 'px'
+	this.node.style.right = 'auto'
+	this.node.style.bottom = 'auto'
+    }
+
+    _mousedown(event) {
+	if (this.node !== event.target) return
+	this.offset_x = event.clientX - this.node.offsetLeft
+	this.offset_y = event.clientY - this.node.offsetTop
+	this.log(`mousedown, offset_x=${this.offset_x}, offset_y=${this.offset_y}`)
+	document.addEventListener('mousemove', this.mousemove)
+	this._mousemove(event)
+    }
+
+    _mousemove(event) {
+	this.node.style.cursor = 'move'
+	let p = this.position(event)
+	this.move(p.x, p.y)
+    }
+
+    _mouseup(event, force) {
+	if (!force && (this.node !== event.target)) return
+	this.log('mouseup')
+	document.removeEventListener('mousemove', this.mousemove)
+	this.node.style.cursor = 'default'
+    }
+
+    hook() {
+	this.node.addEventListener('mousedown', this.mousedown)
+	this.node.addEventListener('mouseup', this.mouseup)
+    }
+
+    unhook() {
+	this.node.removeEventListener('mousedown', this.mousedown)
+	this.node.removeEventListener('mouseup', this.mouseup)
+	document.removeEventListener('mousemove', this.mousemove)
+    }
+}
+
 let TocJumper = class {
     constructor(opt) {
 	this.data = null
@@ -40,6 +106,8 @@ let TocJumper = class {
 	document.body.addEventListener('keydown', (event) => {
 	    if (event.target.nodeName === 'INPUT') return
 	    if (event.key === this.opt.key && !event.ctrlKey) this.dlg()
+	    // IE11 returns "Esc", Chrome & Firefox return "Escape"
+	    if (event.key.match(/^Esc/)) this.movable._mouseup(null, true)
 	})
     }
 
@@ -74,8 +142,9 @@ let TocJumper = class {
 	    onSelect: (event, term, item) => this.scroll(term)
 	})
 
-	let destroy = function() {
+	let destroy = () => {
 	    ac.destroy()
+	    this.movable.unhook()
 	    document.body.removeChild(node)
 	}
 
@@ -85,6 +154,9 @@ let TocJumper = class {
 	    // IE11 returns "Esc", Chrome & Firefox return "Escape"
 	    if (event.key.match(/^Esc/)) destroy()
 	})
+
+	this.movable = new Movable(node)
+	this.movable.hook()
 
 	focus(node)
     }

@@ -31,9 +31,8 @@
   background-color: white;
   color: black;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, .4);
+
   position: fixed;
-  top: 4em;
-  right: .5em;
 }
 
 #<%= id %>_close {
@@ -44,10 +43,6 @@
   line-height: 2em;
   width: 2em;
   height: 2em;
-  display: inline-block;
-}
-
-#<%= id %>_close > span {
   display: inline-block;
 }
 
