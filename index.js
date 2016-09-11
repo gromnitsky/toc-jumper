@@ -61,8 +61,7 @@ let TocJumper = class {
 		    if (key.toLowerCase().indexOf(term.toLowerCase()) !== -1)
 			list.push(key)
 		}
-		// TODO: sort by relevancy
-		suggest(list)
+		suggest(TocJumper.sort(list, term))
 	    },
 	    onSelect: (event, term, item) => this.scroll(term)
 	})
@@ -82,6 +81,13 @@ let TocJumper = class {
 	focus(node)
     }
 
+    static sort(arr, term) {
+	return arr.sort( (a, b) => {
+	    if (a.slice(0, term.length) === term) return -1
+	    if (b.slice(0, term.length) === term) return 1
+	    return a.localeCompare(b)
+	})
+    }
 }
 
 module.exports = TocJumper

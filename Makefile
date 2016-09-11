@@ -34,3 +34,8 @@ compile: $(umd)
 release:
 	NODE_ENV=development $(MAKE)
 	NODE_ENV=min $(MAKE)
+
+
+.PHONY: test
+test:
+	mocha -u tdd test/test_*.js
