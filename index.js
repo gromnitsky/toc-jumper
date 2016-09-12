@@ -191,15 +191,18 @@ let TocJumper = class {
 	})
 
 	this.movable = new Movable(node, this.opt.storage_id)
+	this.movable.log = this.log
 	this.movable.hook()
 
 	focus(node)
     }
 
     static sort(arr, term) {
+	if (!term) return arr
+	term = term.toLowerCase()
 	return arr.sort( (a, b) => {
-	    if (a.slice(0, term.length) === term) return -1
-	    if (b.slice(0, term.length) === term) return 1
+	    if (a.slice(0, term.length).toLowerCase() === term) return -1
+	    if (b.slice(0, term.length).toLowerCase() === term) return 1
 	    return a.localeCompare(b)
 	})
     }

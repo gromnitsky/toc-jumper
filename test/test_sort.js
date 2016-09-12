@@ -8,8 +8,8 @@ suite('Toc Jumper', function() {
     test('sort 2', function() {
 	assert.deepEqual([], TocJumper.sort([]))
 
-	assert.deepEqual(['foo', 'foobar', 'barfoo'],
-			 TocJumper.sort(['barfoo', 'foo', 'foobar'], 'foo'))
+	assert.deepEqual(['Foo', 'foobar', 'barfoo'],
+			 TocJumper.sort(['barfoo', 'Foo', 'foobar'], 'foo'))
 
     })
 })
