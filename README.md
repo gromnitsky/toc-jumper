@@ -31,6 +31,10 @@ You can also set a custom initial position of the widget:
 
 By default it's  `top: '4em', right: '.5em'`.
 
+The widget window is mouse-movable. If user changes its initial
+position, the widget coordinates are saved in the localStorage. To
+disable auto-saving, pass `pref_save: false`.
+
 
 ## Compilation
 

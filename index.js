@@ -1,16 +1,20 @@
 'use strict';
 
 let fs = require('fs')		// browserify & brfs
+
+let store = require('store')
+
 let template = require('./template')
 let AutoComplete = require('./auto-complete.js')
 
 let Movable = class {
-    constructor(node) {
+    constructor(node, storage_id) {
 	this.node = node
 	this.offset_x = null
 	this.offset_y = null
+	this.storage_id = storage_id
 
-	// we ought to specificaly bind mouse* callbacks to this class
+	// we ought to specificaly bind mouse* callbacks to this object
 	// for addEventListener/removeEventListener
 	this.mousedown = this._mousedown.bind(this)
 	this.mousemove = this._mousemove.bind(this)
@@ -36,8 +40,12 @@ let Movable = class {
 	this.node.style.bottom = 'auto'
     }
 
+    valid_event(event) {
+	return (this.node === event.target) && (event.button === 0)
+    }
+
     _mousedown(event) {
-	if (this.node !== event.target) return
+	if (!this.valid_event(event)) return
 	this.offset_x = event.clientX - this.node.offsetLeft
 	this.offset_y = event.clientY - this.node.offsetTop
 	this.log(`mousedown, offset_x=${this.offset_x}, offset_y=${this.offset_y}`)
@@ -51,11 +59,25 @@ let Movable = class {
 	this.move(p.x, p.y)
     }
 
+    // when `force` is true, `event` should be null because we're
+    // invoking _mouseup() manually from a completely diff context to
+    // forcibly remove mousemove listener.
     _mouseup(event, force) {
-	if (!force && (this.node !== event.target)) return
+	if (!force && !this.valid_event(event)) return
 	this.log('mouseup')
 	document.removeEventListener('mousemove', this.mousemove)
 	this.node.style.cursor = 'default'
+
+	// save the widget position
+	if (!this.storage_id || force) return
+	let p = this.position(event)
+	store.set(this.storage_id, {
+	    left: p.x + 'px',
+	    top: p.y + 'px',
+	    right: 'auto',
+	    bottom: 'auto'
+	})
+	this.log('saved')
     }
 
     hook() {
@@ -79,6 +101,7 @@ let TocJumper = class {
 	    selector: '',
 	    transform: null,
 	    key: 'i',
+	    pref_save: true,
 
 	    top: '4em',
 	    right: '.5em',
@@ -86,11 +109,23 @@ let TocJumper = class {
 	    left: 'auto',
 	}
 
-	for (let idx in opt) {	// merge
-	    if (opt.hasOwnProperty(idx)) this.opt[idx] = opt[idx]
-	}
+	// merge user options
+	for (let idx in opt) this.opt[idx] = opt[idx]
+
+	if (this.opt.pref_save) this.opt.storage_id = `toc_jumper--${this.opt.id}`
+
 	this.log = console.log.bind(console, 'TocJumper:')
 	this.log('init')
+    }
+
+    load_saved_opt() {
+	if (!this.opt.storage_id) return
+	let saved_opt = store.get(this.opt.storage_id)
+	if (saved_opt) {
+	    ['top', 'right', 'bottom', 'left']
+		.forEach( (idx) => this.opt[idx] = saved_opt[idx] || this.opt[idx] )
+	    this.log("loaded saved options")
+	}
     }
 
     scroll(term) {
@@ -115,6 +150,7 @@ let TocJumper = class {
 	let node = document.getElementById(this.opt.id)
 	if (node) return focus(node)
 
+	this.load_saved_opt()
 	node = document.createElement('div')
 	node.id = this.opt.id;
 	['top', 'right', 'bottom', 'left']
@@ -155,7 +191,7 @@ let TocJumper = class {
 	    if (event.key.match(/^Esc/)) destroy()
 	})
 
-	this.movable = new Movable(node)
+	this.movable = new Movable(node, this.opt.storage_id)
 	this.movable.hook()
 
 	focus(node)
