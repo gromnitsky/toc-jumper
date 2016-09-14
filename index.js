@@ -3,6 +3,7 @@
 let fs = require('fs')		// browserify & brfs
 
 let store = require('store')
+let keycode = require('keycode')
 
 let template = require('./template')
 let AutoComplete = require('./auto-complete.js')
@@ -141,8 +142,8 @@ let TocJumper = class {
 	document.body.addEventListener('keydown', (event) => {
 	    if (['INPUT', 'TEXTAREA'].indexOf(event.target.nodeName) !== -1)
 		return
-	    if (event.key === this.opt.key && !event.ctrlKey) this.dlg()
-	    if (is_escape_key(event)) this.movable._mouseup(null, true)
+	    if (keycode(event) === this.opt.key && !event.ctrlKey) this.dlg()
+	    if (keycode(event) === 'esc') this.movable._mouseup(null, true)
 	})
     }
 
@@ -186,8 +187,8 @@ let TocJumper = class {
 
 	node.querySelector(`#${this.opt.id}_close`).onclick = destroy
 	node.addEventListener('keydown', (event) => {
-	    if (event.key === 'Enter') this.scroll(input.value)
-	    if (is_escape_key(event)) destroy()
+	    if (keycode(event) === 'enter') this.scroll(input.value)
+	    if (keycode(event) === 'esc') destroy()
 	})
 
 	this.movable = new Movable(node, this.opt.storage_id)
@@ -236,9 +237,4 @@ let css_inject = function(data) {
 
 let focus = function(node) {
     setTimeout( () => node.querySelector('input').focus(), 1)
-}
-
-// IE11 returns "Esc", Chrome & Firefox return "Escape"
-let is_escape_key = function(event) {
-    return event.key.match(/^Esc/)
 }
